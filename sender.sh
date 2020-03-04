@@ -47,7 +47,7 @@ function sendMail() {
         FILENAME="Message.txt"
     else
         FILENAME=$(basename "${ATTACHMENT%}")
-        ATTACHMENT=`base64 -i $ATTACHMENT`
+        ATTACHMENT=`base64 -i -w 0 $ATTACHMENT`
     fi
 
     TEMPLATE="ses-email-template.json"
