@@ -7,6 +7,16 @@
 
 ## Global vars
 
+
+shopt -s expand_aliases
+
+# set the default sed behavior to do a replace with bo backup
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias sedCmd="sed -i ''"
+else
+  alias sedCmd="sed -i "
+fi
+
 function usage() {
     echo "Usage: $0 [-h|--help ]
         [-s|--subject <string> subject/title for email ]
@@ -56,12 +66,12 @@ function sendMail() {
 
     cp $TEMPLATE $TMPFILE
 
-    sed -i -e "s/{SUBJECT}/$SUBJECT/g" $TMPFILE
-    sed -i -e "s/{FROM}/$FROM/g" $TMPFILE
-    sed -i -e "s/{RECVS}/$RECVS/g" $TMPFILE
-    sed -i -e "s/{BODY}/$BODY/g" $TMPFILE
-    sed -i -e "s/{FILENAME}/$FILENAME/g" $TMPFILE
-    sed -i -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
+    sedCmd -e "s/{SUBJECT}/$SUBJECT/g" $TMPFILE
+    sedCmd -e "s/{FROM}/$FROM/g" $TMPFILE
+    sedCmd -e "s/{RECVS}/$RECVS/g" $TMPFILE
+    sedCmd -e "s/{BODY}/$BODY/g" $TMPFILE
+    sedCmd -e "s/{FILENAME}/$FILENAME/g" $TMPFILE
+    sedCmd -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
 
     aws ses send-raw-email --raw-message file://$TMPFILE
 }
@@ -109,6 +119,7 @@ while :; do
 
   shift
 done
+
 
 checkRequirements
 
